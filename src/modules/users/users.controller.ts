@@ -1,21 +1,26 @@
-import { Controller, Param, Query, Req, Res } from '@nestjs/common';
+import { Controller, InternalServerErrorException, Param, Query, Req, Res, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/users.dto';
 import { Post, Body, Get } from '@nestjs/common';
 import { NotImplementedException } from '@nestjs/common';
 import { Request, Response } from 'express';
+import { JwtAuthGuard } from 'src/infrastructure/auth/jwt-auth.guard';
+import { ExtractUserIdService } from '../shared/utils/extract-user-id/extract-user-id.service';
+import { AuthenticatedUserDto } from '../shared/dto/AuthenticatedUser.dto';
 
 @Controller('users')
+@UseGuards(JwtAuthGuard)
 export class UsersController {
-    constructor(private userService: UsersService) {}
-
-    @Get()
-    async getUser(@Query('email') email: string) {
-        return await this.userService.getUserByEmail(email);
-    }
+    constructor(
+        private userService: UsersService, 
+        private userUtils: ExtractUserIdService) {}
     
-    @Post('signup')
-    async signup(@Body() user: CreateUserDto) {
-        return await this.userService.createUser(user);
+    
+    @Get()
+    async getUser(@Query('email') email: string, @Req() req: Request) {
+        const id = this.userUtils.getUserId(req.user as AuthenticatedUserDto)
+        console.log(id)
+        return
+        //return await this.userService.getUserByEmail(email);
     }
 }
+
