@@ -30,7 +30,7 @@ export class AuthService {
                 createdAt,
                 updatedAt,
             );
-            return this.prismaService.user.create({ data: newUser });   
+            return await this.prismaService.user.create({ data: newUser });   
         } catch (error) {
             console.error(error);
             return new HttpException('Error creating user', 500); 
