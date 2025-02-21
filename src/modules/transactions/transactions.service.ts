@@ -32,14 +32,14 @@ export class TransactionsService {
     }
   }
 
-  async getTransactions(userId: string, page: number = 1, type?: string) {
+  async getTransactions(userId: string, page: number = 1, type?: string | undefined) {	
     try {
       const limit: number = 10;
       const skip = (page - 1) * limit;
       const whereCondition: { userId: string; type?: string } = {
         userId: userId,
       };
-      if (type) {
+      if (type !== undefined) {
         whereCondition.type = type;
       }
       const transactions = await this.prismaService.transaction.findMany({

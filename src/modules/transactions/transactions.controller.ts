@@ -16,21 +16,9 @@ export class TransactionsController {
     ) {}
 
     @Get()
-    async getTransactions(@Query('page') page: number, @Req() req: any) {
+    async getTransactions(@Req() req: any, @Query('page') page: number, @Query('type') type?: string) {
         const user = this.userUtils.getUserId(req.user as AuthenticatedUserDto)
-        return await this.transactionsService.getTransactions(user, page);
-    }
-
-    @Get()
-    async getExpenses(@Query('page') page: number, @Query('type') type: string, @Req() req: any){
-        const user = this.userUtils.getUserId(req.user as AuthenticatedUserDto)
-        return await this.transactionsService.getTransactions(user, page, type);
-    }
-
-    @Get()
-    async getIncomes(@Query('page') page: number, @Query('type') type: string, @Req() req: any){
-        const user = this.userUtils.getUserId(req.user as AuthenticatedUserDto)
-        return await this.transactionsService.getTransactions(user, page, type);
+        return await this.transactionsService.getTransactions(user, page, type ? type : undefined);
     }
 
     @Post()
